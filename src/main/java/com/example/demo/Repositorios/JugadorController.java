@@ -1,6 +1,6 @@
-package Repositorios;
+package com.example.demo.Repositorios;
 
-import Modelos.Jugador;
+import com.example.demo.Modelos.Jugador;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

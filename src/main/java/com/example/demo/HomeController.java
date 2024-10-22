@@ -1,6 +1,7 @@
-package Modelos;
+package com.example.demo;
 
-import Repositorios.JugadorController;
+import com.example.demo.Modelos.Jugador;
+import com.example.demo.Repositorios.JugadorController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

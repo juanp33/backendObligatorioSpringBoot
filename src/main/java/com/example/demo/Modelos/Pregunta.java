@@ -1,4 +1,4 @@
-package Modelos;
+package com.example.demo.Modelos;
 
 import jakarta.persistence.*;
 import java.util.List;
