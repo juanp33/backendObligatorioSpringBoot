@@ -14,7 +14,7 @@ public class HomeController {
     @Autowired
     private JugadorController userRepository;
 
-    @GetMapping("/check-db")
+    @GetMapping("/")
     public String checkDatabaseConnection() {
         try {
             List<Jugador> users = userRepository.findAll();
