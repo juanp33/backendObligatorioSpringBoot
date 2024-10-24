@@ -52,7 +52,7 @@ public class AuthController {
                     loginRequest.getPassword()
             );
             System.out.println("creo usuarios");
-            return ResponseEntity.ok(new JwtResponse(token));
+            return ResponseEntity.status(401).body("Credenciales correctas: ");
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Credenciales incorrectas: " + e.getMessage());
         }
