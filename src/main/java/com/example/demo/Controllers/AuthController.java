@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "https://frontend-obligatorio.vercel.app")
 public class AuthController {
 
     private final UsuarioService usuarioService;
