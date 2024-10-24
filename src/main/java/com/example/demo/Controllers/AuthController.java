@@ -42,13 +42,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest, @RequestHeader(value = "X-API-KEY", required = true) String apiKey) {
         if (!"NacionalNacional".equals(apiKey)) {
+            System.out.println("entro aca");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Clave API inválida");
         }
         try {
+            System.out.println("Llego a usuarios");
             String token = usuarioService.loginUser(
                     loginRequest.getUsername(),
                     loginRequest.getPassword()
             );
+            System.out.println("creo usuarios");
             return ResponseEntity.ok(new JwtResponse(token));
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Credenciales incorrectas: " + e.getMessage());
