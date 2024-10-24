@@ -28,7 +28,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para aplicaciones REST, opcional
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // Permitir estas rutas sin autenticación
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // Permitir acceso a estas rutas sin autenticación
                         .anyRequest().authenticated() // Todas las demás rutas requieren autenticación
                 )
                 .formLogin(form -> form
@@ -38,12 +38,5 @@ public class SecurityConfig {
                 .logout(logout -> logout.permitAll()); // Permitir a los usuarios cerrar sesión
 
         return http.build();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authBuilder.userDetailsService(usuarioDetailsService).passwordEncoder(passwordEncoder());
-        return authBuilder.build();
     }
 }
