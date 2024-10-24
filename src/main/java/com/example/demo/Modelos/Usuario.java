@@ -1,7 +1,7 @@
 package com.example.demo.Modelos;
 
 import jakarta.persistence.*;
-
+@Entity
 public class Usuario {
 
     @Id
