@@ -22,6 +22,7 @@ public class UsuarioService {
 
     public Usuario registerUser(String username, String password, String email) {
         Usuario existingUsuario = usuarioRepository.findByUsername(username);
+
         if (existingUsuario != null) {
             throw new RuntimeException("El usuario ya existe");
         }

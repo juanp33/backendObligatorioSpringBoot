@@ -5,6 +5,7 @@ import com.example.demo.APIRequest.LoginRequest;
 import com.example.demo.APIRequest.RegisterRequest;
 
 import com.example.demo.Services.UsuarioService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<String> registerUser(@RequestBody RegisterRequest registerRequest,  @RequestHeader(value = "X-API-KEY", required = true) String apiKey) {
+        if (!"NacionalNacional".equals(apiKey)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Clave API inválida");
+        }
+
         try {
             usuarioService.registerUser(
                     registerRequest.getUsername(),
@@ -35,7 +40,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest, @RequestHeader(value = "X-API-KEY", required = true) String apiKey) {
+        if (!"NacionalNacional".equals(apiKey)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Clave API inválida");
+        }
         try {
             String token = usuarioService.loginUser(
                     loginRequest.getUsername(),
