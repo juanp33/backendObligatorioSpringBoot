@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Permitir todas las solicitudes OPTIONS
                         .requestMatchers("/api/usuarios/registrar", "/api/usuarios/login").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 );
         return http.build();
     }
