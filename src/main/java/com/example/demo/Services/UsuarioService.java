@@ -16,6 +16,7 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
+
     public Usuario registerUser(String username, String password, String email) {
         if (usuarioRepository.findByUsername(username) != null) {
             throw new RuntimeException("El usuario ya existe");
