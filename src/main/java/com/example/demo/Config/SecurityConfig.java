@@ -23,25 +23,12 @@ public class SecurityConfig {
                         .requestMatchers("/public/**").permitAll() // Permitir rutas públicas
                         .anyRequest().authenticated() // Requerir autenticación para las demás rutas
                 )
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())); // Aplica la configuración de CORS
+                ; // Aplica la configuración de CORS
 
         return http.build();
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://frontendobligatorionuevo-production.up.railway.app", "http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
     }
 }
