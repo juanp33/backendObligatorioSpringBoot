@@ -1,6 +1,6 @@
 package com.example.demo.Controllers;
 
-import com.example.demo.APIRequest.LoginRequest;
+import com.example.demo.Modelos.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +20,12 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<String> login(@RequestBody Usuario usuario) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequest.getUsername(),
-                            loginRequest.getPassword()
+                            usuario.getUsername(),
+                            usuario.getPassword()
                     )
             );
             return ResponseEntity.ok("Login exitoso");
