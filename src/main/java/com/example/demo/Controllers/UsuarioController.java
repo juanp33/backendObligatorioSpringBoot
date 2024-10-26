@@ -1,6 +1,7 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.Modelos.Usuario;
+import com.example.demo.Services.JugadorService;
 import com.example.demo.Services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,11 +17,13 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
-
+@Autowired
+private JugadorService jugadorService;
     @PostMapping("/registrar")
     public ResponseEntity<String> registrarUsuario(@RequestBody Usuario usuario) {
         try {
             usuarioService.registrarUsuario(usuario);
+            jugadorService.crearNuevoJugador(usuario);
             return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado exitosamente");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al registrar el usuario");

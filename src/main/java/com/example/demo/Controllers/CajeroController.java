@@ -1,5 +1,6 @@
 package com.example.demo.Controllers;
 
+import com.example.demo.APIRequest.DepositRequest;
 import com.example.demo.Modelos.Jugador;
 import com.example.demo.Modelos.Saldo;
 import com.example.demo.Modelos.Usuario;
@@ -26,8 +27,10 @@ public class CajeroController {
 
     // Método para depositar saldo
     @PostMapping("/depositar")
-    public ResponseEntity<String> depositarSaldo(@RequestParam String username, @RequestParam double monto) {
-        // Buscar el objeto Usuario por su nombre de usuario
+    public ResponseEntity<String> depositarSaldo(@RequestBody DepositRequest request) {
+
+        String username = request.getUsername();
+        double monto = request.getMonto();
         Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
 
 
@@ -50,10 +53,11 @@ public class CajeroController {
                 }
             }
 
-    // Método para retirar saldo
+
     @PostMapping("/retirar")
-    public ResponseEntity<String> retirarSaldo(@RequestParam String username, @RequestParam double monto) {
-        // Buscar el objeto Usuario por su nombre de usuario
+    public ResponseEntity<String> retirarSaldo(@RequestBody DepositRequest request) {
+        String username = request.getUsername();
+        double monto = request.getMonto();
         Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
 
         if (usuarioOpt.isPresent()) {
