@@ -13,13 +13,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api/usuarios")
 public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public AuthController(UsuarioRepository usuarioRepository, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
@@ -28,28 +34,27 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-
-
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         try {
             // Verificar si el usuario existe
-            if (usuarioRepository.existsByUsername(loginRequest.getUsername())) {
-                // Obtener el usuario de la base de datos
-                Usuario usuario = usuarioRepository.findByUsername(loginRequest.getUsername());
+            Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(loginRequest.getUsername());
 
-                // Si llegaste aquí, el usuario existe y puedes verificar la contraseña.
+            if (usuarioOpt.isPresent()) {
+                Usuario usuario = usuarioOpt.get();
+
+                // Verificar la contraseña
                 if (passwordEncoder.matches(loginRequest.getPassword(), usuario.getPassword())) {
                     return ResponseEntity.ok("Login exitoso");
+                } else {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
                 }
-
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no encontrado");
             }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error durante la autenticación");
         }
     }
-
 }

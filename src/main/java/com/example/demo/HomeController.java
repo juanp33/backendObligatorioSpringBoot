@@ -1,8 +1,8 @@
 package com.example.demo;
 
 import com.example.demo.Modelos.Jugador;
-import com.example.demo.Repositorios.JugadorController;
 
+import com.example.demo.Repositorios.JugadorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +13,7 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
-    private JugadorController userRepository;
+    private JugadorRepository userRepository;
 
     @GetMapping("/")
     public String checkDatabaseConnection() {
