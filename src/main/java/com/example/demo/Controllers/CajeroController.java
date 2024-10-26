@@ -4,6 +4,7 @@ import com.example.demo.Modelos.Jugador;
 import com.example.demo.Modelos.Saldo;
 import com.example.demo.Modelos.Usuario;
 import com.example.demo.Repositorios.JugadorRepository;
+import com.example.demo.Repositorios.SaldoRepository;
 import com.example.demo.Repositorios.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/cajero")
+@RequestMapping("/api/cajero")
 public class CajeroController {
 
     @Autowired
@@ -20,6 +21,8 @@ public class CajeroController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private SaldoRepository saldoRepository;
 
     // Método para depositar saldo
     @PostMapping("/depositar")
@@ -27,30 +30,25 @@ public class CajeroController {
         // Buscar el objeto Usuario por su nombre de usuario
         Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
 
-        if (usuarioOpt.isPresent()) {
+
             Usuario usuario = usuarioOpt.get();
-            // Buscar el jugador asociado a ese usuario
+
             Optional<Jugador> jugadorOpt = jugadorRepository.findByUsuario(usuario);
 
-            if (jugadorOpt.isPresent()) {
+
                 Jugador jugador = jugadorOpt.get();
                 Saldo saldo = jugador.getSaldo();
 
                 if (saldo != null) {
                     // Aumentar el saldo
                     saldo.cargarSaldo(monto);
-                    jugadorRepository.save(jugador);  // Guardar cambios
+                    saldoRepository.save(saldo);
+
                     return ResponseEntity.ok("Depósito realizado con éxito.");
                 } else {
-                    return ResponseEntity.badRequest().body("El jugador no tiene saldo inicial.");
+                    return ResponseEntity.unprocessableEntity().body("El jugador no tiene saldo inicial.");
                 }
-            } else {
-                return ResponseEntity.badRequest().body("Jugador no encontrado.");
             }
-        } else {
-            return ResponseEntity.badRequest().body("Usuario no encontrado.");
-        }
-    }
 
     // Método para retirar saldo
     @PostMapping("/retirar")
@@ -73,7 +71,7 @@ public class CajeroController {
                     }
                     // Disminuir el saldo
                     saldo.modificarSaldo(saldo.getMonto() - monto);
-                    jugadorRepository.save(jugador);  // Guardar cambios
+                    saldoRepository.save(saldo);
                     return ResponseEntity.ok("Retiro realizado con éxito.");
                 } else {
                     return ResponseEntity.badRequest().body("El jugador no tiene saldo inicial.");
