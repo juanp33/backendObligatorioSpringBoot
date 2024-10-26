@@ -1,17 +1,19 @@
 package com.example.demo.APIRequest;
+
+import com.example.demo.Modelos.Pregunta;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.Entity;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-
-import com.example.demo.Modelos.Pregunta;
-import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import jakarta.persistence.*;
 
 @Entity
-
 public class APIChatGPT {
     private static final String API_KEY = System.getenv("OPENAI_API_KEY"); // Reemplaza esto con tu clave API
     private static final String API_URL = "https://api.openai.com/v1/completions";
@@ -26,17 +28,22 @@ public class APIChatGPT {
                 "Respuesta correcta: <letra>";
 
         try {
-            JSONObject requestBody = new JSONObject();
-            requestBody.put("model", "text-davinci-003"); // Asegúrate de usar el modelo correcto
-            requestBody.put("prompt", prompt);
-            requestBody.put("temperature", 0.7);
-            requestBody.put("max_tokens", 100);
+            ObjectMapper objectMapper = new ObjectMapper();
+            // Crear el cuerpo de la solicitud como un Map para luego convertirlo a JSON
+            var requestBodyMap = new HashMap<String, Object>();
+            requestBodyMap.put("model", "text-davinci-003"); // Asegúrate de usar el modelo correcto
+            requestBodyMap.put("prompt", prompt);
+            requestBodyMap.put("temperature", 0.7);
+            requestBodyMap.put("max_tokens", 100);
+
+            // Convertir el Map a JSON
+            String requestBody = objectMapper.writeValueAsString(requestBodyMap);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL))
                     .header("Content-Type", "application/json")
                     .header("Authorization", "Bearer " + API_KEY)
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 
             HttpClient client = HttpClient.newHttpClient();
@@ -46,12 +53,12 @@ public class APIChatGPT {
 
             if (response.statusCode() != 200) {
                 System.out.println("Error: " + response.statusCode() + " - " + response.body());
-                return null; // o lanza una excepción
+                return null;
             }
 
-            JSONObject jsonResponse = new JSONObject(response.body());
-            String respuestaGenerada = jsonResponse.getJSONArray("choices")
-                    .getJSONObject(0).getString("text").trim();
+            // Parsear la respuesta JSON usando Jackson
+            JsonNode jsonResponse = objectMapper.readTree(response.body());
+            String respuestaGenerada = jsonResponse.get("choices").get(0).get("text").asText().trim();
 
             // Extraer partes de la respuesta
             String[] partes = respuestaGenerada.split("\n");
