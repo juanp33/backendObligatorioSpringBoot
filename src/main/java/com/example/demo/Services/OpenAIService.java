@@ -1,9 +1,9 @@
-package com.example.demo.APIRequest;
+package com.example.demo.Services;
 
 import com.example.demo.Modelos.Pregunta;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.Entity;
+import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -12,11 +12,12 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Entity
-public class APIChatGPT {
-    private static final String API_KEY = System.getenv("OPENAI_API_KEY"); // Reemplaza esto con tu clave API
-    private static final String API_URL = "https://api.openai.com/v1/completions";
+@Service
+public class OpenAIService {
+    private static final String API_KEY = System.getenv("OPENAI_API_KEY");
+    private static final String API_URL = "https://api.openai.com/v1/chat/completions";
 
     public static Pregunta generarPregunta(String categoria) {
         String prompt = "Genera una pregunta de " + categoria + " con cuatro opciones de respuesta, indicando la respuesta correcta. Formato:\n" +
@@ -30,9 +31,14 @@ public class APIChatGPT {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             // Crear el cuerpo de la solicitud como un Map para luego convertirlo a JSON
-            var requestBodyMap = new HashMap<String, Object>();
-            requestBodyMap.put("model", "text-davinci-003"); // Asegúrate de usar el modelo correcto
-            requestBodyMap.put("prompt", prompt);
+            Map<String, Object> requestBodyMap = new HashMap<>();
+            requestBodyMap.put("model", "gpt-3.5-turbo"); // Puedes usar "gpt-4" si tienes acceso
+            List<Map<String, String>> messages = new ArrayList<>();
+            Map<String, String> message = new HashMap<>();
+            message.put("role", "user");
+            message.put("content", prompt);
+            messages.add(message);
+            requestBodyMap.put("messages", messages);
             requestBodyMap.put("temperature", 0.7);
             requestBodyMap.put("max_tokens", 100);
 
@@ -58,7 +64,7 @@ public class APIChatGPT {
 
             // Parsear la respuesta JSON usando Jackson
             JsonNode jsonResponse = objectMapper.readTree(response.body());
-            String respuestaGenerada = jsonResponse.get("choices").get(0).get("text").asText().trim();
+            String respuestaGenerada = jsonResponse.get("choices").get(0).get("message").get("content").asText().trim();
 
             // Extraer partes de la respuesta
             String[] partes = respuestaGenerada.split("\n");
