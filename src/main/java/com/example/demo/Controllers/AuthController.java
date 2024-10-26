@@ -1,8 +1,10 @@
 package com.example.demo.Controllers;
 
 import com.example.demo.APIRequest.LoginRequest;
+import com.example.demo.APIResponse.LoginResponse;
 import com.example.demo.Modelos.Usuario;
-import com.example.demo.Repositorios.UsuarioRepository;
+import com.example.demo.Services.JugadorService;
+import com.example.demo.Services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,29 +23,37 @@ public class AuthController {
 
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioService usuarioService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JugadorService jugadorService;
 
-    public AuthController(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
-        this.usuarioRepository = usuarioRepository;
-
+    public AuthController(UsuarioService usuarioService, PasswordEncoder passwordEncoder, JugadorService jugadorService) {
+        this.usuarioService = usuarioService;
+        this.jugadorService=jugadorService;
         this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
             // Verificar si el usuario existe
-            Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(loginRequest.getUsername());
+            Optional<Usuario> usuarioOpt = usuarioService.encontrarPorUsername(loginRequest.getUsername());
 
             if (usuarioOpt.isPresent()) {
                 Usuario usuario = usuarioOpt.get();
 
                 // Verificar la contraseña
                 if (passwordEncoder.matches(loginRequest.getPassword(), usuario.getPassword())) {
-                    return ResponseEntity.ok("Login exitoso");
+                    LoginResponse loginResponse = new LoginResponse(
+                            "Login exitoso",
+                            usuario.getUsername(),
+                            usuario.getEmail(),
+                            jugadorService.ObtenerMontoUsuario(usuario)
+                    );
+                    return ResponseEntity.ok(loginResponse);
                 } else {
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
                 }

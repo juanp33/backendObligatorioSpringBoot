@@ -8,6 +8,8 @@ import com.example.demo.Repositorios.SaldoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class JugadorService {
 
@@ -24,5 +26,13 @@ public class JugadorService {
         saldoRepository.save(saldo);
         Jugador jugador = new Jugador(usuario,0,0,saldo);
         jugadorRepository.save(jugador);
+    }
+    public double ObtenerMontoUsuario(Usuario usuario){
+        Optional<Jugador> jugadorOptional=  jugadorRepository.findByUsuario(usuario);
+        if(jugadorOptional.isPresent()){
+            Jugador jugador = jugadorOptional.get();
+            return jugador.getSaldo().getMonto();
+        }
+        return 0;
     }
 }
