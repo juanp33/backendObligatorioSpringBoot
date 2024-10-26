@@ -35,4 +35,7 @@ public class JugadorService {
         }
         return 0;
     }
+    public  Optional<Jugador> encontrarPorUsuario(Usuario usuario){
+        return jugadorRepository.findByUsuario(usuario);
+    }
 }

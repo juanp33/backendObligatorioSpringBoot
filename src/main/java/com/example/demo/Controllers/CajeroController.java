@@ -7,6 +7,9 @@ import com.example.demo.Modelos.Usuario;
 import com.example.demo.Repositorios.JugadorRepository;
 import com.example.demo.Repositorios.SaldoRepository;
 import com.example.demo.Repositorios.UsuarioRepository;
+import com.example.demo.Services.JugadorService;
+import com.example.demo.Services.SaldoService;
+import com.example.demo.Services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +21,12 @@ import java.util.Optional;
 public class CajeroController {
 
     @Autowired
-    private JugadorRepository jugadorRepository;
+    private JugadorService jugadorService;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioService usuarioService;
     @Autowired
-    private SaldoRepository saldoRepository;
+    private SaldoService saldoService;
 
     // Método para depositar saldo
     @PostMapping("/depositar")
@@ -31,12 +34,12 @@ public class CajeroController {
 
         String username = request.getUsername();
         double monto = request.getMonto();
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
+        Optional<Usuario> usuarioOpt = usuarioService.encontrarPorUsername(username);
 
 
             Usuario usuario = usuarioOpt.get();
 
-            Optional<Jugador> jugadorOpt = jugadorRepository.findByUsuario(usuario);
+            Optional<Jugador> jugadorOpt = jugadorService.encontrarPorUsuario(usuario);
 
 
                 Jugador jugador = jugadorOpt.get();
@@ -45,7 +48,7 @@ public class CajeroController {
                 if (saldo != null) {
                     // Aumentar el saldo
                     saldo.cargarSaldo(monto);
-                    saldoRepository.save(saldo);
+                    saldoService.guardarSaldo(saldo);
 
                     return ResponseEntity.ok("Depósito realizado con éxito.");
                 } else {
@@ -58,12 +61,12 @@ public class CajeroController {
     public ResponseEntity<String> retirarSaldo(@RequestBody DepositRequest request) {
         String username = request.getUsername();
         double monto = request.getMonto();
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
+        Optional<Usuario> usuarioOpt = usuarioService.encontrarPorUsername(username);
 
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
             // Buscar el jugador asociado a ese usuario
-            Optional<Jugador> jugadorOpt = jugadorRepository.findByUsuario(usuario);
+            Optional<Jugador> jugadorOpt = jugadorService.encontrarPorUsuario(usuario);
 
             if (jugadorOpt.isPresent()) {
                 Jugador jugador = jugadorOpt.get();
@@ -75,7 +78,7 @@ public class CajeroController {
                     }
                     // Disminuir el saldo
                     saldo.modificarSaldo(saldo.getMonto() - monto);
-                    saldoRepository.save(saldo);
+                    saldoService.guardarSaldo(saldo);
                     return ResponseEntity.ok("Retiro realizado con éxito.");
                 } else {
                     return ResponseEntity.badRequest().body("El jugador no tiene saldo inicial.");
