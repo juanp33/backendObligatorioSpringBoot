@@ -2,6 +2,7 @@ package com.example.demo.Controllers;
 
 import com.example.demo.APIRequest.LoginRequest;
 import com.example.demo.APIResponse.LoginResponse;
+import com.example.demo.Modelos.Jugador;
 import com.example.demo.Modelos.Usuario;
 import com.example.demo.Services.JugadorService;
 import com.example.demo.Services.UsuarioService;
@@ -45,13 +46,18 @@ public class AuthController {
             if (usuarioOpt.isPresent()) {
                 Usuario usuario = usuarioOpt.get();
 
+
                 // Verificar la contraseña
                 if (passwordEncoder.matches(loginRequest.getPassword(), usuario.getPassword())) {
+                    Optional<Jugador> jugadorOpt = jugadorService.encontrarPorUsuario(usuario);
+                    Jugador jugador = jugadorOpt.get();
                     LoginResponse loginResponse = new LoginResponse(
                             "Login exitoso",
                             usuario.getUsername(),
                             usuario.getEmail(),
-                            jugadorService.ObtenerMontoUsuario(usuario)
+                            jugadorService.ObtenerMontoUsuario(usuario),
+                            jugador.getPuntajeMaximoSP(),
+                            0,0
                     );
                     return ResponseEntity.ok(loginResponse);
                 } else {

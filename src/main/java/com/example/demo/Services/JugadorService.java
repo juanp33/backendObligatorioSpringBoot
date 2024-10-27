@@ -16,26 +16,30 @@ public class JugadorService {
     private JugadorRepository jugadorRepository;
 
     private SaldoRepository saldoRepository;
+
     @Autowired
     public JugadorService(SaldoRepository saldoRepository, JugadorRepository jugadorRepository) {
         this.saldoRepository = saldoRepository;
         this.jugadorRepository = jugadorRepository;
     }
-    public void crearNuevoJugador(Usuario usuario){
+
+    public void crearNuevoJugador(Usuario usuario) {
         Saldo saldo = new Saldo(5.0);
         saldoRepository.save(saldo);
-        Jugador jugador = new Jugador(usuario,0,0,saldo);
+        Jugador jugador = new Jugador(usuario, 0, 0, saldo);
         jugadorRepository.save(jugador);
     }
-    public double ObtenerMontoUsuario(Usuario usuario){
-        Optional<Jugador> jugadorOptional=  jugadorRepository.findByUsuario(usuario);
-        if(jugadorOptional.isPresent()){
+
+    public double ObtenerMontoUsuario(Usuario usuario) {
+        Optional<Jugador> jugadorOptional = jugadorRepository.findByUsuario(usuario);
+        if (jugadorOptional.isPresent()) {
             Jugador jugador = jugadorOptional.get();
             return jugador.getSaldo().getMonto();
         }
         return 0;
     }
-    public  Optional<Jugador> encontrarPorUsuario(Usuario usuario){
+
+    public Optional<Jugador> encontrarPorUsuario(Usuario usuario) {
         return jugadorRepository.findByUsuario(usuario);
     }
 }

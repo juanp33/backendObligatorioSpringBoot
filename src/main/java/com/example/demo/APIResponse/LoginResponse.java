@@ -5,12 +5,17 @@ public class LoginResponse {
     private String nombreUsuario;
     private String email;
     private double montoSaldo;
-
-    public LoginResponse(String mensaje, String nombreUsuario, String email, double montoSaldo) {
+    private int jugadorMaxPuntuacion;
+    private int jugadorVictorias;
+    private int jugadorDerrotas;
+    public LoginResponse(String mensaje, String nombreUsuario, String email, double montoSaldo,int jugadorMaxPuntuacion, int jugadorVictorias, int jugadorDerrotas) {
         this.mensaje = mensaje;
         this.nombreUsuario = nombreUsuario;
         this.email = email;
         this.montoSaldo = montoSaldo;
+        this.jugadorMaxPuntuacion =jugadorMaxPuntuacion;
+        this.jugadorVictorias= jugadorVictorias;
+        this.jugadorDerrotas=jugadorDerrotas;
     }
 
     public String getMensaje() {
