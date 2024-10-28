@@ -5,6 +5,9 @@ public class LoginResponse {
     private String nombreUsuario;
     private String email;
     private double montoSaldo;
+
+
+
     private int jugadorMaxPuntuacion;
     private int jugadorVictorias;
     private int jugadorDerrotas;
@@ -17,7 +20,17 @@ public class LoginResponse {
         this.jugadorVictorias= jugadorVictorias;
         this.jugadorDerrotas=jugadorDerrotas;
     }
+    public int getJugadorMaxPuntuacion() {
+        return jugadorMaxPuntuacion;
+    }
 
+    public int getJugadorVictorias() {
+        return jugadorVictorias;
+    }
+
+    public int getJugadorDerrotas() {
+        return jugadorDerrotas;
+    }
     public String getMensaje() {
         return mensaje;
     }
