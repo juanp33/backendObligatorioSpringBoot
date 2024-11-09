@@ -39,6 +39,11 @@ public class JugadorService {
         return 0;
     }
 
+    public void actualizarPuntajeMax(Jugador jugador,int puntaje){
+        jugador.setPuntajeMaximoSP(puntaje);
+        jugadorRepository.save(jugador);
+    }
+
     public Optional<Jugador> encontrarPorUsuario(Usuario usuario) {
         return jugadorRepository.findByUsuario(usuario);
     }
