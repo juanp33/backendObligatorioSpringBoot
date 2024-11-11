@@ -5,6 +5,7 @@ import com.example.demo.Modelos.Saldo;
 import com.example.demo.Modelos.Usuario;
 import com.example.demo.Repositorios.JugadorRepository;
 import com.example.demo.Repositorios.SaldoRepository;
+import com.example.demo.Repositorios.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class JugadorService {
     private JugadorRepository jugadorRepository;
 
     private SaldoRepository saldoRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     public JugadorService(SaldoRepository saldoRepository, JugadorRepository jugadorRepository) {
@@ -41,5 +43,10 @@ public class JugadorService {
 
     public Optional<Jugador> encontrarPorUsuario(Usuario usuario) {
         return jugadorRepository.findByUsuario(usuario);
+    }
+    public Optional<Jugador> encontrarPorNombre (String nombre){
+        Optional<Usuario> usuario = usuarioRepository.findByUsername(nombre);
+        Usuario usuariofinal = usuario.get();
+        return encontrarPorUsuario(usuariofinal);
     }
 }
