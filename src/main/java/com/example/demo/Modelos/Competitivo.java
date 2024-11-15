@@ -5,16 +5,17 @@ import jakarta.persistence.*;
 @Entity
 @DiscriminatorValue("Competitivo")
 public class Competitivo extends Juego implements Ganador {
-    public Competitivo(Jugador jugador1, Jugador jugador2) {
+    public Competitivo(Jugador jugador1, Jugador jugador2, String lobbyID) {
         this.jugador2 = jugador2;
         this.jugador1 = jugador1;
+        this.lobbyID = lobbyID;
     }
 
     private Jugador jugador1;
     private Jugador jugador2;
     private int puntajeJ1;
     private int puntajeJ2;
-    private int tiempo;
+    private String lobbyID;
 
     public Jugador getJugador1() {
         return jugador1;
@@ -32,17 +33,12 @@ public class Competitivo extends Juego implements Ganador {
         return puntajeJ1;
     }
 
-    public int getTiempo() {
-        return tiempo;
-    }
 
     public void setJugador1(Jugador jugador1) {
         this.jugador1 = jugador1;
     }
 
-    public void setTiempo(int tiempo) {
-        this.tiempo = tiempo;
-    }
+
 
     public void setPuntajeJ2(int puntajeJ2) {
         this.puntajeJ2 = puntajeJ2;

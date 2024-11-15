@@ -13,10 +13,11 @@ import java.util.Optional;
 
 @Service
 public class JugadorService {
-
+    @Autowired
     private JugadorRepository jugadorRepository;
-
+    @Autowired
     private SaldoRepository saldoRepository;
+    @Autowired
     private UsuarioRepository usuarioRepository;
 
     @Autowired

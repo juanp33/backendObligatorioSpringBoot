@@ -32,6 +32,7 @@ public class LobbyService {
         if (lobby != null) {
             if (!lobby.estaCompleto()) {
                 lobby.agregarJugador(jugador);
+                System.out.println(lobby.getJugadores());
                 return "Jugador añadido correctamente";
             } else {
                 return "Lobby completo. No se pueden unir más jugadores";

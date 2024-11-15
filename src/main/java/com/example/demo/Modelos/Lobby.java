@@ -41,7 +41,7 @@ public class Lobby {
     }
 
     public void agregarJugador(String jugador) {
-        if (jugadores.size() < 2) { // Permitir un máximo de 2 jugadores
+        if (!jugadores.contains(jugador) && jugadores.size() < 2) { // Verificar si el jugador no está ya en la lista y hay espacio
             jugadores.add(jugador);
             if (jugadores.size() == 2) {
                 this.activo = true; // El lobby se activa cuando hay 2 jugadores

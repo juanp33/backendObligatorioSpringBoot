@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Jugadores")
-public class Jugador {
+public class Jugador   {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +17,7 @@ public class Jugador {
     private Integer puntajeMaximoSP;
     private Integer puntajeCompetitivo;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "saldo_id", referencedColumnName = "id")
     private Saldo saldo;
 
