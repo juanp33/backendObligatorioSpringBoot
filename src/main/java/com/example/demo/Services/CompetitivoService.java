@@ -11,6 +11,10 @@ public class CompetitivoService {
     private CompetitivoRepository competitivoRepository;
 
     public void guardarPartidaCompetitiva(Competitivo competitivo){
-        competitivoRepository.save(competitivo);
+        try{ competitivoRepository.save(competitivo);}
+        catch(Exception ex){
+
+        }
+
     }
 }

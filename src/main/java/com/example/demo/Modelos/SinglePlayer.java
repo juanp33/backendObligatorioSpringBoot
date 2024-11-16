@@ -3,9 +3,11 @@ package com.example.demo.Modelos;
 import jakarta.persistence.*;
 
 @Entity
-@DiscriminatorValue("SinglePlayer")
-public class SinglePlayer extends Juego {
 
+public class SinglePlayer  {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private int puntaje;
     private int tiempo;

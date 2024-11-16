@@ -3,19 +3,32 @@ package com.example.demo.Modelos;
 import jakarta.persistence.*;
 
 @Entity
-@DiscriminatorValue("Competitivo")
-public class Competitivo extends Juego implements Ganador {
-    public Competitivo(Jugador jugador1, Jugador jugador2, String lobbyID) {
-        this.jugador2 = jugador2;
-        this.jugador1 = jugador1;
-        this.lobbyID = lobbyID;
-    }
 
+public class Competitivo  implements Ganador {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idCompetitivo;
+    @ManyToOne
+    @JoinColumn(name = "jugador1_id", referencedColumnName = "idJugador")
     private Jugador jugador1;
+
+    @ManyToOne
+    @JoinColumn(name = "jugador2_id", referencedColumnName = "idJugador")
     private Jugador jugador2;
     private int puntajeJ1;
     private int puntajeJ2;
     private String lobbyID;
+
+    public Competitivo(Jugador jugador1, Jugador jugador2, String lobbyID) {
+        this.jugador2 = jugador2;
+        this.jugador1 = jugador1;
+        this.lobbyID = lobbyID;
+        this.puntajeJ1 = 0;
+        this.puntajeJ2=0;
+    }
+
+    public Competitivo() {
+    }
 
     public Jugador getJugador1() {
         return jugador1;

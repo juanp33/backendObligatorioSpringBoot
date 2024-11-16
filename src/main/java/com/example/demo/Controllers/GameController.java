@@ -83,7 +83,7 @@ public class GameController {
             Pregunta pregunta = OpenAIService.generarPregunta(categoria);
 
 
-
+            System.out.println("XdXD");
             return new PreguntaRequest(pregunta,turno);
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,13 +97,11 @@ public class GameController {
         return message;
     }
 
-    @MessageMapping("/respuesta/{lobbyId}")
+    @MessageMapping("/respuesta")
     @SendTo("/topic/lobbies/{lobbyId}")
     public PreguntaRequest RecibirRespuesta(@DestinationVariable String lobbyId, @Payload String message) {
         ObjectMapper objectMapper = new ObjectMapper();
         GameStartRequest request;
-
-
         try {
 
             request = objectMapper.readValue(message, GameStartRequest.class);
@@ -150,6 +148,8 @@ public class GameController {
         Jugador jugador1= (jugadorService.encontrarPorNombre(jugadores.get(0)).get());
         Jugador jugador2= (jugadorService.encontrarPorNombre(jugadores.get(1)).get());
         Competitivo competitivo= new Competitivo(jugador1, jugador2, lobbyId);
+        System.out.println(lobbyId);
+        System.out.println("xdxdxd");
         competitivoService.guardarPartidaCompetitiva(competitivo);
 
         Map<String, String> response = new HashMap<>();
