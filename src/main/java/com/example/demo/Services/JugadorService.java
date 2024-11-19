@@ -29,7 +29,7 @@ public class JugadorService {
     public void crearNuevoJugador(Usuario usuario) {
         Saldo saldo = new Saldo(5.0);
         saldoRepository.save(saldo);
-        Jugador jugador = new Jugador(usuario, 0, 0, saldo);
+        Jugador jugador = new Jugador(usuario, 0, 0,0, saldo);
         jugadorRepository.save(jugador);
     }
 
@@ -49,5 +49,19 @@ public class JugadorService {
         Optional<Usuario> usuario = usuarioRepository.findByUsername(nombre);
         Usuario usuariofinal = usuario.get();
         return encontrarPorUsuario(usuariofinal);
+    }
+
+    public void actualizarPartidaGanada(Jugador jugador1,Jugador jugador2, Jugador Ganador){
+        if(Ganador==jugador1) {
+            jugador1.setPartidasGanadas(jugador1.getPartidasGanadas() + 1);
+            jugadorRepository.save(jugador1);
+            jugador2.setPartidasPerdidas(jugador2.getPartidasPerdidas() + 1);
+            jugadorRepository.save(jugador2);
+        }else{
+            jugador2.setPartidasGanadas(jugador2.getPartidasGanadas() + 1);
+            jugadorRepository.save(jugador2);
+            jugador1.setPartidasPerdidas(jugador1.getPartidasPerdidas() + 1);
+            jugadorRepository.save(jugador1);
+        }
     }
 }
