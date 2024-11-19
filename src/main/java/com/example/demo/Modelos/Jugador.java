@@ -15,7 +15,8 @@ public class Jugador   {
     private Usuario usuario;
 
     private Integer puntajeMaximoSP;
-    private Integer puntajeCompetitivo;
+    private Integer partidasGanadas;
+    private Integer partidasPerdidas;
 
     @OneToOne
     @JoinColumn(name = "saldo_id", referencedColumnName = "id")
@@ -25,10 +26,11 @@ public class Jugador   {
     public Jugador() {}
 
     // Constructor con parámetros
-    public Jugador(Usuario usuario, Integer puntajeMaximoSP, Integer puntajeCompetitivo, Saldo saldo) {
+    public Jugador(Usuario usuario, Integer puntajeMaximoSP, Integer partidasGanadas, Integer partidasPerdidas, Saldo saldo) {
         this.usuario = usuario;
         this.puntajeMaximoSP = puntajeMaximoSP;
-        this.puntajeCompetitivo = puntajeCompetitivo;
+        this.partidasGanadas = partidasGanadas;
+        this.partidasPerdidas = partidasPerdidas;
         this.saldo = saldo;
     }
 
@@ -57,12 +59,20 @@ public class Jugador   {
         this.puntajeMaximoSP = puntajeMaximoSP;
     }
 
-    public Integer getPuntajeCompetitivo() {
-        return puntajeCompetitivo;
+    public Integer getPartidasPerdidas() {
+        return partidasPerdidas;
     }
 
-    public void setPuntajeCompetitivo(Integer puntajeCompetitivo) {
-        this.puntajeCompetitivo = puntajeCompetitivo;
+    public Integer getPartidasGanadas() {
+        return partidasGanadas;
+    }
+
+    public void setPartidasGanadas(Integer partidasGanadas) {
+        this.partidasGanadas = partidasGanadas;
+    }
+
+    public void setPartidasPerdidas(Integer partidasPerdidas) {
+        this.partidasPerdidas = partidasPerdidas;
     }
 
     public Saldo getSaldo() {

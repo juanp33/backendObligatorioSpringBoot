@@ -163,25 +163,31 @@ public class GameController {
     }
 
     @MessageMapping("/finalizarPartida/{lobbyId}")
-    @SendTo("/topic/lobbies/{lobbyId}")
-    public String finalizarPartida(@DestinationVariable String lobbyId,@Payload String message){
+
+    public void  finalizarPartida(@DestinationVariable String lobbyId,@Payload String message){
         ObjectMapper objectMapper = new ObjectMapper();
         GameFinishRequest request;
-
+        Competitivo competitivo=competitivoService.encontrarCompetitivoPorLobbyId(lobbyId);
         try {
             request = objectMapper.readValue(message, GameFinishRequest.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+
         List<Integer> Puntajes = request.getPuntajeJugadores();
-        int jugador1= Puntajes.get(0);
-        int jugador2= Puntajes.get(1);
-        System.out.println(jugador1);
-        System.out.println(jugador2);
+        int puntosJugador1= Puntajes.get(0);
+        int puntosJugador2= Puntajes.get(1);
+        System.out.println(puntosJugador1);
+        System.out.println(puntosJugador2);
+        competitivoService.actualizarPuntajes(puntosJugador1,puntosJugador2,lobbyId);
+        Jugador jugador1=competitivo.getJugador1();
+        Jugador jugador2=competitivo.getJugador2();
+        if(puntosJugador1>puntosJugador2) {
+            jugadorService.actualizarPartidaGanada(jugador1,jugador2,jugador1);
+        }else{
+            jugadorService.actualizarPartidaGanada(jugador1,jugador2,jugador2);
+        }
 
-        competitivoService.actualizarPuntajes(jugador1,jugador2,lobbyId);
-
-        return"s";
     }
 
     private String parseJugadorFromMessage(String message) {

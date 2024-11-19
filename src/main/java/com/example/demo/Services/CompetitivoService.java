@@ -20,6 +20,12 @@ public class CompetitivoService {
         }
 
     }
+    public Competitivo encontrarCompetitivoPorLobbyId(String lobbyID){
+        Optional<Competitivo> CompetitivoOptional = competitivoRepository.findBylobbyID(lobbyID);
+            Competitivo competitivo = CompetitivoOptional.get();
+            return competitivo;
+
+    }
 
     public void actualizarPuntajes(int puntosPlayer1,int puntosPlayer2,String lobbyID){
         Optional<Competitivo> CompetitivoOptional= competitivoRepository.findBylobbyID(lobbyID);
