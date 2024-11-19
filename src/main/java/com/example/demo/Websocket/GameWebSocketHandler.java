@@ -23,9 +23,9 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         if (!session.getId().equals(currentPlayerTurn)) return; // Ignorar si no es el turno del jugador
 
-        // Procesar la respuesta y alternar el turno
+
         String payload = message.getPayload();
-        // Aquí podrías verificar si la respuesta es correcta
+
 
         currentPlayerTurn = players.keySet().stream()
                 .filter(id -> !id.equals(session.getId()))

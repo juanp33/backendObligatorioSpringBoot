@@ -82,9 +82,9 @@ public class GameController {
             String categoria = ruletaController.getRandomCategoria();
             Pregunta pregunta = OpenAIService.generarPregunta(categoria);
 
-
+            System.out.println(categoria);
             System.out.println("XdXD");
-            return new PreguntaRequest(pregunta,turno);
+            return new PreguntaRequest(pregunta,turno,categoria);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error al deserializar el mensaje JSON");
@@ -122,7 +122,7 @@ public class GameController {
 
 
 
-            return new PreguntaRequest(pregunta,turno);
+            return new PreguntaRequest(pregunta,turno,categoria);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error al deserializar el mensaje JSON");

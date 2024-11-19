@@ -6,10 +6,11 @@ public class PreguntaRequest {
     public Pregunta pregunta;
 
     public String turnoActivo;
+    public String categoria;
 
-    public PreguntaRequest(Pregunta pregunta, String turnoActivo) {
+    public PreguntaRequest(Pregunta pregunta, String turnoActivo, String categoria) {
         this.pregunta = pregunta;
-
+        this.categoria=categoria;
         this.turnoActivo = turnoActivo;
     }
 
@@ -17,7 +18,9 @@ public class PreguntaRequest {
         return pregunta;
     }
 
-
+    public String getCategoria() {
+        return categoria;
+    }
 
     public String getTurnoActivo() {
         return turnoActivo;
@@ -27,7 +30,9 @@ public class PreguntaRequest {
         this.pregunta = pregunta;
     }
 
-
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
 
     public void setTurnoActivo(String turnoActivo) {
         this.turnoActivo = turnoActivo;
