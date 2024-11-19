@@ -1,5 +1,6 @@
 package com.example.demo.Controllers;
 
+import com.example.demo.APIRequest.GameFinishRequest;
 import com.example.demo.APIRequest.GameStartRequest;
 import com.example.demo.APIRequest.PreguntaRequest;
 import com.example.demo.Modelos.Competitivo;
@@ -9,6 +10,7 @@ import com.example.demo.Services.CompetitivoService;
 import com.example.demo.Services.JugadorService;
 import com.example.demo.Services.LobbyService;
 import com.example.demo.Services.OpenAIService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,6 +162,27 @@ public class GameController {
         return response;
     }
 
+    @MessageMapping("/finalizarPartida/{lobbyId}")
+    @SendTo("/topic/lobbies/{lobbyId}")
+    public String finalizarPartida(@DestinationVariable String lobbyId,@Payload String message){
+        ObjectMapper objectMapper = new ObjectMapper();
+        GameFinishRequest request;
+
+        try {
+            request = objectMapper.readValue(message, GameFinishRequest.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        List<Integer> Puntajes = request.getPuntajeJugadores();
+        int jugador1= Puntajes.get(0);
+        int jugador2= Puntajes.get(1);
+        System.out.println(jugador1);
+        System.out.println(jugador2);
+
+        competitivoService.actualizarPuntajes(jugador1,jugador2,lobbyId);
+
+        return"s";
+    }
 
     private String parseJugadorFromMessage(String message) {
         ObjectMapper objectMapper = new ObjectMapper();
