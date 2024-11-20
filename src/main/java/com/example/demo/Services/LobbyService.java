@@ -1,38 +1,57 @@
 package com.example.demo.Services;
 
 import com.example.demo.Modelos.Lobby;
+import com.example.demo.Repositorios.LobbyRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LobbyService {
-    private final Map<String, Lobby> lobbies = new ConcurrentHashMap<>();
+
+    @Autowired
+    private LobbyRepository lobbyRepository; // Repositorio para gestionar la persistencia de lobbies
+    @Autowired
+    private CompetitivoService competitivoService;
 
     public Lobby crearLobby(String lobbyId, String jugador) {
         Lobby lobby = new Lobby(lobbyId);
         lobby.agregarJugador(jugador); // Añadir al jugador que crea el lobby
         lobby.setTurnoActual(jugador); // Configurar el turno inicial al creador
-        lobbies.put(lobbyId, lobby);
-        return lobby;
+        return lobbyRepository.save(lobby); // Guardar en la base de datos
     }
-    public String getFirstPlayer(String lobbyId) {
-        Lobby lobby = lobbies.get(lobbyId);
-        if (lobby != null && !lobby.getJugadores().isEmpty()) {
 
-            return lobby.getJugadores().get(0);
+    public String getFirstPlayer(String lobbyId) {
+        Optional<Lobby> lobby = lobbyRepository.findById(lobbyId);
+        if (lobby.isPresent() && !lobby.get().getJugadores().isEmpty()) {
+            return lobby.get().getJugadores().get(0);
         }
         return null;
     }
-    public String unirJugador(String lobbyId, String jugador) {
-        Lobby lobby = lobbies.get(lobbyId);
+
+    public String removerJugador(String lobbyId, String jugador) {
+        Lobby lobby = lobbyRepository.findById(lobbyId).orElse(null);
         if (lobby != null) {
+            lobby.removerJugador(jugador);
+            if (lobby.getJugadores().isEmpty()) {
+                lobbyRepository.delete(lobby); // Eliminar el lobby si no tiene jugadores
+            } else {
+                lobbyRepository.save(lobby); // Guardar los cambios
+            }
+            return "Jugador removido correctamente";
+        }
+        return "Lobby no encontrado";
+    }
+    public String unirJugador(String lobbyId, String jugador) {
+        Optional<Lobby> lobbyOptional = lobbyRepository.findById(lobbyId);
+        if (lobbyOptional.isPresent()) {
+            Lobby lobby = lobbyOptional.get();
             if (!lobby.estaCompleto()) {
                 lobby.agregarJugador(jugador);
-                System.out.println(lobby.getJugadores());
+                lobbyRepository.save(lobby); // Actualizar el lobby en la base de datos
                 return "Jugador añadido correctamente";
             } else {
                 return "Lobby completo. No se pueden unir más jugadores";
@@ -42,32 +61,22 @@ public class LobbyService {
     }
 
     public Lobby obtenerLobby(String lobbyId) {
-        return lobbies.get(lobbyId);
+        return lobbyRepository.findById(lobbyId).orElse(null);
     }
+
     public List<Lobby> obtenerLobbiesActivos() {
-        List<Lobby> lobbiesActivos = new ArrayList<>();
-        for (Lobby lobby : lobbies.values()) {
-
-                lobbiesActivos.add(lobby);
-
-        }
-        return lobbiesActivos;
+        return lobbyRepository.findAll().stream()
+                .filter(lobby -> lobby.getJugadores().size() < 2) // Considerar activos los lobbies con menos de 2 jugadores
+                .collect(Collectors.toList());
     }
-    public String cambiarTurno(String lobbyId) {
-        Lobby lobby = lobbies.get(lobbyId);
-        if (lobby != null && lobby.estaCompleto()) {
-            String jugadorActual = lobby.getTurnoActual();
-            String nuevoTurno = jugadorActual.equals(lobby.getJugadores().get(0))
-                    ? lobby.getJugadores().get(1)
-                    : lobby.getJugadores().get(0);
-            lobby.setTurnoActual(nuevoTurno);
-            return nuevoTurno;
-        }
-        return null;
+
+    public void eliminarLobby(String lobbyId) {
+        lobbyRepository.deleteById(lobbyId);
     }
 
     public boolean esLobbyActivo(String lobbyId) {
-        Lobby lobby = lobbies.get(lobbyId);
-        return lobby != null && lobby.isActivo();
+        Optional<Lobby> lobby = lobbyRepository.findById(lobbyId);
+
+        return lobby.isPresent() && lobby.get().getJugadores().size() == 1 ;
     }
 }
