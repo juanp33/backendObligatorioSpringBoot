@@ -1,5 +1,6 @@
 package com.example.demo.Services;
 
+import com.example.demo.APIResponse.JugadorResponse;
 import com.example.demo.Modelos.Jugador;
 import com.example.demo.Modelos.Saldo;
 import com.example.demo.Modelos.Usuario;
@@ -9,6 +10,7 @@ import com.example.demo.Repositorios.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,7 +27,10 @@ public class JugadorService {
         this.saldoRepository = saldoRepository;
         this.jugadorRepository = jugadorRepository;
     }
+    public List<JugadorResponse> obtenerTodosLosJugadoresConDetalles(){
+      return  jugadorRepository.findAllJugadoresWithDetails();
 
+    }
     public void crearNuevoJugador(Usuario usuario) {
         Saldo saldo = new Saldo(5.0);
         saldoRepository.save(saldo);
