@@ -69,4 +69,9 @@ public class JugadorService {
             jugadorRepository.save(jugador1);
         }
     }
+
+    public void actualizarPuntajeMaximo(Jugador jugador,int puntos){
+                 jugador.setPuntajeMaximoSP(puntos);
+                 jugadorRepository.save(jugador);
+    }
 }
