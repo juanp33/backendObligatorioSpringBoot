@@ -4,7 +4,6 @@ import com.example.demo.Modelos.Pregunta;
 
 public class PreguntaRequest {
     public Pregunta pregunta;
-
     public String turnoActivo;
     public String categoria;
 
